@@ -1,23 +1,26 @@
 {
-  "name": "richelieu_ql",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.33.0",
-  "devDependencies": {
-    "@types/node": "^25.5.2",
-    "grammy": "^1.42.0",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
-  },
-  "dependencies": {
-    "dotenv": "^17.4.0",
-    "openai": "^6.33.0"
-  }
+    "name": "tg-inline-llm-bot",
+    "version": "1.1.0",
+    "description": "",
+    "main": "dist/bot.js",
+    "scripts": {
+        "dev": "tsx bot.ts",
+        "build": "esbuild bot.ts --bundle --platform=node --target=node22 --outfile=dist/bot.js",
+        "start": "node dist/bot.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.33.0",
+    "devDependencies": {
+        "@types/node": "^25.5.2",
+        "esbuild": "^0.28.0",
+        "grammy": "^1.42.0",
+        "tsx": "^4.21.0",
+        "typescript": "^6.0.2"
+    },
+    "dependencies": {
+        "dotenv": "^17.4.0",
+        "openai": "^6.33.0"
+    }
 }
