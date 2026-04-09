@@ -22,6 +22,6 @@ export const allowedUserIds = new Set(
 );
 
 export const openaiClient = new OpenAI({
-    apiKey: process.env["API_KEY"],
-    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: apiKey,
+    baseURL: baseURL
 });
