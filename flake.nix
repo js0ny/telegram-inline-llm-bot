@@ -35,9 +35,8 @@
             ];
 
             shellHook = ''
-              echo "Telegram Bot (TypeScript) 开发环境已加载。"
-              echo "Node 版本: $(node -v)"
-              echo "pnpm 版本: $(pnpm -v)"
+              echo "node -v: $(node -v)"
+              echo "pnpm -v: $(pnpm -v)"
             '';
           };
         }
@@ -59,11 +58,11 @@
             nativeBuildInputs = [
               pkgs.nodejs_22
               pkgs.pnpm
-              pkgs.pnpm.configHook
+              pkgs.pnpmConfigHook
               pkgs.makeWrapper
             ];
 
-            pnpmDeps = pkgs.pnpm.fetchDeps {
+            pnpmDeps = pkgs.fetchPnpmDeps {
               pname = "tg-inline-llm-bot";
               version = "1.0.0";
               src = ./.;
@@ -118,7 +117,7 @@
             enable = mkEnableOption "Telegram Inline LLM Bot";
             package = mkOption {
               type = types.package;
-              default = self.packages.${pkgs.system}.default;
+              default = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
               description = "The tg-inline-llm-bot package to use.";
             };
             model = mkOption {
