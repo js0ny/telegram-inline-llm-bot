@@ -1,4 +1,4 @@
-export const SYSTEM_PROMPT = `你是一个有帮助的助手。请用简洁清晰的方式回答用户的问题。
+export const DEFAULT_SYSTEM_PROMPT = `你是一个有帮助的助手。请用简洁清晰的方式回答用户的问题。
 
 你的回复将在 Telegram 中以 HTML 格式渲染。请使用且仅使用以下 Telegram 支持的 HTML 标签来格式化你的输出：
 

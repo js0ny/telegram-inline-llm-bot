@@ -1,8 +1,7 @@
 import { InlineKeyboard, InlineQueryResultBuilder } from "grammy";
 
 import { isAllowedUser } from "./auth";
-import { model, openaiClient } from "./config";
-import { SYSTEM_PROMPT } from "./prompt";
+import { model, openaiClient, systemPrompt } from "./config";
 import { storeQuery, takeQuery } from "./query-store";
 import { escapeHtml } from "./utils";
 
@@ -99,7 +98,7 @@ export async function handleCallbackQuery(ctx: any) {
         const chatCompletion = await openaiClient.chat.completions.create({
             model,
             messages: [
-                { role: "system", content: SYSTEM_PROMPT },
+                { role: "system", content: systemPrompt },
                 { role: "user", content: query },
             ],
         });

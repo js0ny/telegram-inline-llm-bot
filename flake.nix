@@ -138,6 +138,13 @@
               description = "Extra plain-text environment variables for the service.";
             };
 
+            promptFile = mkOption {
+              type = types.nullOr types.path;
+              default = null;
+              example = "/etc/tgbot/system-prompt.txt";
+              description = "Path to a file containing the system prompt.";
+            };
+
             envFile = mkOption {
               type = types.nullOr types.path;
               default = null;
@@ -152,12 +159,16 @@
           config = mkIf cfg.enable {
             systemd.services.tg-inline-llm-bot = {
               description = "Telegram Inline LLM Bot";
+              wants = [ "network-online.target" ];
               after = [ "network-online.target" ];
               wantedBy = [ "multi-user.target" ];
 
               environment = {
                 MODEL = cfg.model;
                 BASE_URL = cfg.apiBase;
+              }
+              // lib.optionalAttrs (cfg.promptFile != null) {
+                SYSTEM_PROMPT_FILE = "%d/system-prompt";
               }
               // cfg.extraEnvironment;
 
@@ -169,6 +180,9 @@
                 ProtectHome = true;
                 PrivateTmp = true;
                 NoNewPrivileges = true;
+              }
+              // lib.optionalAttrs (cfg.promptFile != null) {
+                LoadCredential = [ "system-prompt:${toString cfg.promptFile}" ];
               }
               // lib.optionalAttrs (cfg.envFile != null) {
                 EnvironmentFile = cfg.envFile;
