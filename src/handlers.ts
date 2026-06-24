@@ -2,7 +2,7 @@ import { InlineKeyboard, InlineQueryResultBuilder } from "grammy";
 import type { InputRichMessage } from "grammy/types";
 
 import { isAllowedUser } from "./auth";
-import { model, openaiClient, systemPrompt } from "./config";
+import { collapseAnswer, collapseLineThreshold, model, openaiClient, systemPrompt } from "./config";
 import { storeQuery, takeQuery } from "./query-store";
 import { escapeHtml, stripRichMarkup } from "./utils";
 
@@ -19,6 +19,13 @@ function questionPrefix(query: string): string {
 
 function questionRichMessage(query: string, bodyMarkdown: string): InputRichMessage {
     return richMarkdown(`${questionPrefix(query)}\n\n${bodyMarkdown}`);
+}
+
+function wrapInDetails(body: string, query: string): string {
+    const lineCount = body.split("\n").length;
+    const openAttr = collapseLineThreshold === -1 || lineCount <= collapseLineThreshold ? " open" : "";
+    const summaryQuery = query.length > 80 ? query.slice(0, 80) + "…" : query;
+    return `<details${openAttr}><summary>❓ **问题：** ${escapeHtml(summaryQuery)}</summary>\n\n${body}\n\n</details>`;
 }
 
 function fitRichMessageBody(query: string, bodyMarkdown: string): string {
@@ -150,7 +157,8 @@ export async function handleCallbackQuery(ctx: any) {
         console.log(`[llm_response] user=${ctx.from.id} length=${answer.length}`);
 
         const bodyMarkdown = fitRichMessageBody(query, answer);
-        const richMessage = questionRichMessage(query, bodyMarkdown);
+        const finalBody = collapseAnswer ? wrapInDetails(bodyMarkdown, query) : bodyMarkdown;
+        const richMessage = collapseAnswer ? richMarkdown(finalBody) : questionRichMessage(query, finalBody);
 
         try {
             await editRichMessage(ctx, richMessage);
