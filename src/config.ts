@@ -40,6 +40,8 @@ export const allowedUserIds = new Set(
         .map((id) => id.trim())
         .filter(Boolean),
 );
+export const collapseAnswer = process.env["COLLAPSE_ANSWER"] === "true";
+export const collapseLineThreshold = parseInt(process.env["COLLAPSE_LINE_THRESHOLD"] || "-1", 10);
 
 export const openaiClient = new OpenAI({
     apiKey: apiKey,

@@ -155,6 +155,16 @@
                 Note that this has lower priority than other declared config.
               '';
             };
+            collapseAnswer = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Wrap LLM output in a collapsible details block.";
+            };
+            collapseLineThreshold = mkOption {
+              type = types.int;
+              default = -1;
+              description = "Line count threshold for collapsing the answer block. -1 means never collapse.";
+            };
           };
           config = mkIf cfg.enable {
             systemd.services.tg-inline-llm-bot = {
@@ -169,6 +179,10 @@
               }
               // lib.optionalAttrs (cfg.promptFile != null) {
                 SYSTEM_PROMPT_FILE = "%d/system-prompt";
+              }
+              // lib.optionalAttrs cfg.collapseAnswer {
+                COLLAPSE_ANSWER = "true";
+                COLLAPSE_LINE_THRESHOLD = toString cfg.collapseLineThreshold;
               }
               // cfg.extraEnvironment;
 
